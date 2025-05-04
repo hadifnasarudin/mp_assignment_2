@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:worker_task_management_system/signIn.dart';
 
 class splashScreen extends StatefulWidget {
   const splashScreen({super.key});
@@ -14,7 +15,10 @@ class _splashScreenState extends State<splashScreen> {
     // TODO: implement initState
     super.initState();
     Future.delayed(Duration(seconds: 3),(){
-      Navigator.pushReplacementNamed(context, '/login');
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => signIn()),
+      );
     });
   }
 

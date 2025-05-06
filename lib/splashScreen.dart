@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:worker_task_management_system/signIn.dart';
+import 'package:worker_task_management_system/registerScreen.dart';
 import 'package:lottie/lottie.dart';
 
 
@@ -19,12 +19,13 @@ class _splashScreenState extends State<splashScreen> {
     Future.delayed(Duration(seconds: 7),(){
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => signIn()),
+        MaterialPageRoute(builder: (context) => registerScreen()),
       );
     });
   }
 
   @override
+
   Widget build(BuildContext context) {
     return  Scaffold(
       body: Container(
@@ -33,8 +34,8 @@ class _splashScreenState extends State<splashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Lottie.asset(
-              'asset/animations/splash.json',width:250,height:250,
+            Lottie.network(
+              'https://lottie.host/24dcaebd-52b8-401b-b444-dd18e627aa62/e9oaZDclcf.lottie'
            
           ),
           const SizedBox(height: 50,),

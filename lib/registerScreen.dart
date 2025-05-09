@@ -1,13 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
-class registerScreen extends StatefulWidget {
+
+class registerScreen extends StatefulWidget {           // contain ui things
   const registerScreen({super.key});
+  
 
   @override
   State<registerScreen> createState() => _registerScreenState();
 }
 
-class _registerScreenState extends State<registerScreen> {
+
+class _registerScreenState extends State<registerScreen> {      //state class for any logic or something is not ui
+
+  File? profileimage;
+  final ImagePicker _picker = ImagePicker();
+
   @override
   Widget build(BuildContext context) {
     return  Scaffold(
@@ -29,8 +38,25 @@ class _registerScreenState extends State<registerScreen> {
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
+
+
                           
                   children: [
+
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: profileimage == null
+                          ? AssetImage('assets/profile_placeholder.png')  //if no image is selected, show default image
+                          : FileImage(profileimage!) as ImageProvider,    //if image is selected, show selected image
+                    ),
+
+                    SizedBox(height: 20,),
+                    ElevatedButton.icon(
+                      onPressed: getImage,
+                      icon: Icon(Icons.image),
+                      label: Text('choose image'),
+                    ),
+
                     TextField(
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
@@ -73,6 +99,19 @@ class _registerScreenState extends State<registerScreen> {
       ),
 
       ),
+      
     );
+
+    
   }
+      Future getImage() async {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+      setState(() {
+        if (pickedFile != null) {
+          profileimage = File(pickedFile.path);
+        } else {
+          print('No image selected.');
+        }
+      });
+    }
 }

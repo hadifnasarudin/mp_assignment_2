@@ -13,7 +13,11 @@ class registerScreen extends StatefulWidget {           // contain ui things
 
 
 class _registerScreenState extends State<registerScreen> {      //state class for any logic or something is not ui
-
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
   File? profileimage;
   final ImagePicker _picker = ImagePicker();
 
@@ -46,7 +50,7 @@ class _registerScreenState extends State<registerScreen> {      //state class fo
                     CircleAvatar(
                       radius: 60,
                       backgroundImage: profileimage == null
-                          ? AssetImage('assets/profile_placeholder.png')  //if no image is selected, show default image
+                          ? AssetImage('assets/images/profile_placeholder.png')  //if no image is selected, show default image
                           : FileImage(profileimage!) as ImageProvider,    //if image is selected, show selected image
                     ),
 

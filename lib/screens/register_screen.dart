@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:worker_task_management_system/config/myconfig.dart'; // Make sure this is correct
-import 'package:worker_task_management_system/screens/login_screen.dart'; // Ensure the import path is correct
+import 'package:worker_task_management_system/config/myconfig.dart';
+import 'package:worker_task_management_system/screens/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,46 +18,63 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _addressController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Register'),
-        backgroundColor: Colors.yellow,
-      ),
-      body: Container(
-        color: const Color.fromARGB(255, 193, 193, 193),
-        padding: const EdgeInsets.all(30.0),
-        child: Center(
-          child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-            elevation: 8,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    _buildTextField(_nameController, TextInputType.name, 'Full Name'),
-                    const SizedBox(height: 20),
-                    _buildTextField(_emailController, TextInputType.emailAddress, 'Email'),
-                    _buildTextField(_phoneController, TextInputType.phone, 'Phone Number'),
-                    _buildTextField(_passwordController, TextInputType.visiblePassword, 'Password', obscure: true),
-                    _buildTextField(_addressController, TextInputType.text, 'Address'),
-                    const SizedBox(height: 16),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: _confirmRegisterUser,
-                        child: const Text('Register'),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+  void _registerUser() async {
+    final uri = Uri.parse("${MyConfig.myurl}/register_worker.php");
+    final response = await http.post(uri, body: {
+      "name": _nameController.text,
+      "email": _emailController.text,
+      "password": _passwordController.text,
+      "phone": _phoneController.text,
+      "address": _addressController.text,
+    });
+
+    if (response.statusCode == 200) {
+      if (response.body.trim() == "success") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration successful")),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration failed")),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error occurred while registering")),
+      );
+    }
+  }
+
+  void _confirmRegisterUser() {
+    if (_nameController.text.isEmpty ||
+        _emailController.text.isEmpty ||
+        _phoneController.text.isEmpty ||
+        _passwordController.text.isEmpty ||
+        _addressController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please fill in all fields")),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Register this account?"),
+        content: const Text("Are you sure?"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _registerUser();
+            },
+            child: const Text("OK"),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -79,73 +96,71 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  void _confirmRegisterUser() {
-    if (_nameController.text.isEmpty ||
-        _emailController.text.isEmpty ||
-        _phoneController.text.isEmpty ||
-        _passwordController.text.isEmpty ||
-        _addressController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please fill in all fields")),
-      );
-      return;
-    }
-
-    // Display a confirmation dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Register this account?"),
-        content: const Text("Are you sure?"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Close the dialog
-              _registerUser(); // Proceed with registration
-            },
-            child: const Text("OK"),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Register'),
+        backgroundColor: Colors.yellow,
+      ),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFFEDE574), Color(0xFFE1F5C4)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-        ],
+        ),
+        padding: const EdgeInsets.all(30.0),
+        child: Center(
+          child: Card(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
+            elevation: 8,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildTextField(_nameController, TextInputType.name, 'Full Name'),
+                    _buildTextField(_emailController, TextInputType.emailAddress, 'Email'),
+                    _buildTextField(_phoneController, TextInputType.phone, 'Phone Number'),
+                    _buildTextField(_passwordController, TextInputType.visiblePassword, 'Password', obscure: true),
+                    _buildTextField(_addressController, TextInputType.text, 'Address'),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _confirmRegisterUser,
+                        child: const Text('Register'),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text("Already have an account? "),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen()),
+                            );
+                          },
+                          child: const Text(
+                            "Login",
+                            style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
-  }
-
-  void _registerUser() async {
-    final uri = Uri.parse("${MyConfig.myurl}/php/register_worker.php");
-    final response = await http.post(uri, body: {
-      "name": _nameController.text,
-      "email": _emailController.text,
-      "password": _passwordController.text,
-      "phone": _phoneController.text,
-      "address": _addressController.text,
-    });
-
-    // Check if the registration was successful
-    if (response.statusCode == 200) {
-      print(response.body); // Debugging: Check the server response
-
-      if (response.body == "success") {
-        // Show success message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Registration successful")),
-        );
-
-        // Navigate to the Login Screen
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
-        );
-      } else {
-        // Show failure message
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Registration failed")),
-        );
-      }
-    } else {
-      // Handle the error response
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Error occurred while registering")),
-      );
-    }
   }
 }

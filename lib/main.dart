@@ -17,8 +17,4 @@ class MyApp extends StatelessWidget {
       home: const RegisterScreen(),
     );
   }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499

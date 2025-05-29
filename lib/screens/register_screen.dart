@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+<<<<<<< HEAD
 import '../config/myconfig.dart';
 import 'login_screen.dart';
+=======
+import 'package:worker_task_management_system/config/myconfig.dart';
+import 'package:worker_task_management_system/screens/login_screen.dart';
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -19,7 +24,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _addressController = TextEditingController();
 
   void _registerUser() async {
+<<<<<<< HEAD
     // Validate non-empty fields before sending request
+=======
+    final uri = Uri.parse("${MyConfig.myurl}/register_worker.php");
+    final response = await http.post(uri, body: {
+      "name": _nameController.text,
+      "email": _emailController.text,
+      "password": _passwordController.text,
+      "phone": _phoneController.text,
+      "address": _addressController.text,
+    });
+
+    if (response.statusCode == 200) {
+      if (response.body.trim() == "success") {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration successful")),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Registration failed")),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Error occurred while registering")),
+      );
+    }
+  }
+
+  void _confirmRegisterUser() {
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
     if (_nameController.text.isEmpty ||
         _emailController.text.isEmpty ||
         _phoneController.text.isEmpty ||
@@ -28,6 +67,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please fill in all fields")),
       );
+<<<<<<< HEAD
       print("Validation failed: Some fields are empty");
       return;
     }
@@ -90,6 +130,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _confirmRegisterUser() {
+=======
+      return;
+    }
+
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -103,10 +148,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
             },
             child: const Text("OK"),
           ),
+<<<<<<< HEAD
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text("Cancel"),
           ),
+=======
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
         ],
       ),
     );

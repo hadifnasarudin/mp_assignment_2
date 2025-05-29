@@ -22,12 +22,17 @@ class _LoginScreenState extends State<LoginScreen> {
     final response = await http.post(
       Uri.parse("${MyConfig.myurl}/login_worker.php"),
       body: {
+<<<<<<< HEAD
         "email": emailController.text.trim(),
+=======
+        "email": emailController.text,
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
         "password": passwordController.text,
       },
     );
 
     if (response.statusCode == 200) {
+<<<<<<< HEAD
       try {
         var jsonData = jsonDecode(response.body);
         if (jsonData['status'] == 'success') {
@@ -46,6 +51,20 @@ class _LoginScreenState extends State<LoginScreen> {
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Error parsing server response')),
+=======
+      var jsonData = jsonDecode(response.body);
+      if (jsonData['status'] == 'success') {
+        User user = User.fromJson(jsonData['data']);
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.setString('userEmail', user.userEmail);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => ProfileScreen(user: user)),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(jsonData['message'] ?? 'Login failed')),
+>>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
         );
       }
     } else {

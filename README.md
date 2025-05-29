@@ -1,7 +1,7 @@
 # worker_task_management_system
 
 A new Flutter project.
-<<<<<<< HEAD
+
 # WTMS App - Worker Task Management System
 
 This is a mobile application developed using **Flutter**, with a **PHP & MySQL** backend. It allows workers to register, log in, and view their profile information.
@@ -40,11 +40,11 @@ This is a mobile application developed using **Flutter**, with a **PHP & MySQL**
 
 ## YouTube Demo
 
-📺 Watch the demo here: [Your YouTube Demo Link](https://youtu.be/YydSPICrjWw)
-🔗 Watch the 2nd phase demo here(https://youtu.be/qFwuDfw0aK0)
+📺 Watch the demo here: [Your YouTube Demo Link]()
+🔗 Watch the 2nd phase demo here()
 
 ## Author
 
-MUHAMMAD UMAIR BIN NORAZLAN (297248) – STIWK2114 Lab Assignment 2 – A242
+MUHAMMAD HADIF BIN NASARUDIN (297386) – STIWK2114 Lab Assignment 2 – A242
 =======
->>>>>>> 6e02cbf471cb74e4033fc5c6aeb04cedb3ee2499
+

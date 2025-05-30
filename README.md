@@ -40,8 +40,8 @@ This is a mobile application developed using **Flutter**, with a **PHP & MySQL**
 
 ## YouTube Demo
 
-📺 Watch the demo here: [Your YouTube Demo Link]()
-🔗 Watch the 2nd phase demo here()
+📺 Watch the demo 1 here: [Your YouTube Demo Link](https://youtu.be/XO3TaF9MtsE)
+🔗 Watch the 2nd phase demo here(https://youtu.be/_e2pujZzSzQ)
 
 ## Author
 

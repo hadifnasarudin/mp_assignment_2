@@ -2,49 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../config/myconfig.dart';
 import '../model/user.dart';
-import 'profile_screen.dart';
-import 'register_screen.dart';
+import 'main_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
-  void loginUser() async {
+  Future<void> loginWorker() async {
     final response = await http.post(
       Uri.parse("${MyConfig.myurl}/login_worker.php"),
       body: {
-        "email": emailController.text,
-        "password": passwordController.text,
+        "email": _emailController.text,
+        "password": _passwordController.text,
       },
     );
 
-    if (response.statusCode == 200) {
-      var jsonData = jsonDecode(response.body);
-      if (jsonData['status'] == 'success') {
-        User user = User.fromJson(jsonData['data']);
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        prefs.setString('userEmail', user.userEmail);
+    try {
+      final jsonData = json.decode(response.body);
+
+      if (jsonData["status"] == "success") {
+        final worker = jsonData["data"];
+
+        final user = User(
+          userId: worker["id"].toString(),
+          userName: worker["name"],
+          userEmail: worker["email"],
+          userPhone: worker["phone"],
+          userAddress: worker["address"],
+        );
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userId', user.userId);
+        await prefs.setString('userName', user.userName);
+        await prefs.setString('userEmail', user.userEmail);
+        await prefs.setString('userPhone', user.userPhone);
+        await prefs.setString('userAddress', user.userAddress);
+
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => ProfileScreen(user: user)),
+          MaterialPageRoute(builder: (_) => MainScreen(user: user)),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(jsonData['message'] ?? 'Login failed')),
+          SnackBar(content: Text(jsonData["message"] ?? "Login failed")),
         );
       }
-    } else {
+    } catch (e) {
+      print("Login Error: $e");
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login request failed')),
+        const SnackBar(content: Text("Invalid response format")),
       );
     }
   }
@@ -52,75 +68,26 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xFFfceabb), Color(0xFFf8b500)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
-        padding: const EdgeInsets.all(20),
-        child: Center(
-          child: Card(
-            elevation: 10,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text(
-                      'Login',
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 20),
-                    TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
-                    ),
-                    const SizedBox(height: 10),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(labelText: 'Password'),
-                    ),
-                    const SizedBox(height: 20),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: loginUser,
-                        child: const Text('Login'),
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text("Don't have an account? "),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (_) => const RegisterScreen()),
-                            );
-                          },
-                          child: const Text(
-                            "Register",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+      appBar: AppBar(title: const Text("Login")),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: "Email"),
             ),
-          ),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: const InputDecoration(labelText: "Password"),
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: loginWorker,
+              child: const Text("Login"),
+            ),
+          ],
         ),
       ),
     );

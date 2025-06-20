@@ -20,7 +20,7 @@ if (empty($email) || empty($password)) {
     exit();
 }
 
-$sql = "SELECT id, name, email, password FROM workers WHERE email = ?";
+$sql = "SELECT id, name, email, phone, address, password FROM workers WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
 $stmt->execute();
@@ -30,14 +30,15 @@ if ($result->num_rows === 1) {
     $user = $result->fetch_assoc();
 
     if (password_verify($password, $user['password'])) {
-        // Password matches
         echo json_encode([
             'status' => 'success',
             'message' => 'Login successful',
             'data' => [
-                'id' => $user['id'],
+                'id' => (string)$user['id'], // 👈 Ensure this is string
                 'name' => $user['name'],
                 'email' => $user['email'],
+                'phone' => $user['phone'],
+                'address' => $user['address']
             ]
         ]);
     } else {

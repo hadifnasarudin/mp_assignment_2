@@ -32,19 +32,25 @@ This is a mobile application developed using **Flutter**, with a **PHP & MySQL**
 - Copy `wtms_api2` to `C:\xampp\htdocs`
 
 ### 2. Flutter App
-- Open `wtms_app` in VS Code
-- Make sure `pubspec.yaml` includes `http` and `shared_preferences`
-- Run the app on Android Emulator or physical device
+- Open the Flutter app folder (e.g. wtms_app) in VS Code
+- Ensure pubspec.yaml includes:
+ * http
+ * shared_preferences
+ * Run on Android Emulator or physical device
 
-> Note: In API file, use `http://10.0.2.2/wtms_api` for emulator and `http://your-ip/wtms_api` for physical device
+⚠️ For API URLs:
+
+Emulator: http://10.0.2.2/wtms_api2
+Real device: http://your-ip-address/wtms_api2
 
 ## YouTube Demo
 
 📺 Watch the demo 1 here: [Your YouTube Demo Link](https://youtu.be/XO3TaF9MtsE)
 🔗 Watch the 2nd phase demo here(https://youtu.be/_e2pujZzSzQ)
+📺 Watch the Final demo here: [Your YouTube Demo Link](https://youtu.be/UfZYYeRkAxE)
 
 ## Author
 
-MUHAMMAD HADIF BIN NASARUDIN (297386) – STIWK2114 Lab Assignment 2 – A242
+MUHAMMAD HADIF BIN NASARUDIN (297386) – STIWK2114 Final Assignment – A242
 =======
 
